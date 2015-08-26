@@ -326,7 +326,7 @@ def main():
     try:
         shopstage = sys.argv[1]
     except:
-        shopstage =2016
+        shopstage =110
     #for shopstage in range(0,1):       
     tasklist = getTask(host,port,user,password,database,tablename,shopstage)
     if tasklist == 0:

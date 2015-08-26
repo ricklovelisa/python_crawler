@@ -73,7 +73,7 @@ def openPage(url):
     #ipJson =  {'http':'http://'+str(ip[0][0])+':'+str(ip[0][1])}
     #ipJson={'http':'http://222.45.195.34:8118'}
     ipJson = {}
-    time.sleep(5)
+    time.sleep(2)
     proxy_handler = urllib2.ProxyHandler(ipJson)
     opener=urllib2.build_opener(makeCookie(),urllib2.HTTPHandler,proxy_handler)
     urllib2.install_opener(opener)
@@ -359,7 +359,7 @@ def main():
 ##        itemstage = sys.argv[1]
 ##    except:
 ##        itemstage = 22
-    itemstage_list = (305,)
+    itemstage_list = (112,)
     
     for itemstage in itemstage_list:
         projectlist = getTask(host,port,user,password,database,tablename,itemstage)
