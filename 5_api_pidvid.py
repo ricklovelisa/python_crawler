@@ -10,7 +10,7 @@ import json
 from BeautifulSoup import BeautifulSoup
 import multiprocessing
 import top.api
-#import yaml
+import yaml
 
 def getDate():
     date=time.strftime("%Y-%m-%d",time.localtime())
@@ -79,7 +79,7 @@ def getPidvid(cid,appkey,secret):
                 data.append(datatemp)
 
 
-        except:
+        except Exception,e:
             vid = 0
             value = 0
             datatemp = (cid,pid,props,vid,value)
@@ -99,13 +99,14 @@ def api_pidvid_data(info):
 
     try:
         pidviddata = getPidvid(cid,appkey,secret)
-        
-        db=MySQLdb.connect(host=host,user=user,passwd=password,db=database,charset="utf8")
-        dbconn=db.cursor()
+        print(pidviddata)
+        #db=MySQLdb.connect(host=host,user=user,passwd=password,db=database,charset="utf8")
+        #dbconn=db.cursor()
         ItemDataInsert = "REPLACE INTO "+str(tbname)+" (cid,pid,props,vid,value) VALUES (%s,%s,%s,%s,%s)"
-        dbconn.executemany(ItemDataInsert,pidviddata)
-        db.commit()
-        db.close()
+        print(ItemDataInsert)
+        #dbconn.executemany(ItemDataInsert,pidviddata)
+        #db.commit()
+        #db.close()
     except Exception,e:
         print(e)
         print("No Attrib:",str(cid))
@@ -168,7 +169,7 @@ def do_api_pidvid(host,user,password,database,read_table,write_table,rule,appkey
 
 def main():
     # Connection Database
-    conf_file_path = sys.path[0]+"/crawl.conf"
+    conf_file_path = sys.path[0]+"/conf/crawl.conf"
     conf_file = open(conf_file_path)
     conf = yaml.load(conf_file)
     
@@ -195,8 +196,11 @@ def main():
     projectlist = getTask(host,user,password,database,tablename,itemstage)
     for project in projectlist:
         do_api_pidvid(host,user,password,project[0],project[1],project[2],project[4],appkey,secret)
+
+
 if __name__ == "__main__":
-    main()
-##    cid = '120878006'
+
+
+    main()  ##    cid = '120878006'
 
 

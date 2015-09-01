@@ -357,7 +357,7 @@ def main():
     try:
         itemstage_list = sys.argv[1]
     except:
-        itemstage_list = 112
+        itemstage_list = (32,22)
     for itemstag in itemstage_list:
 ##        print(itemstag)
         projectlist = getTask(host,port,user,password,database,tablename,itemstag)

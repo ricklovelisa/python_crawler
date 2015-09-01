@@ -73,7 +73,7 @@ def openPage(url):
     #ipJson =  {'http':'http://'+str(ip[0][0])+':'+str(ip[0][1])}
     #ipJson={'http':'http://222.45.195.34:8118'}
     ipJson = {}
-    time.sleep(2)
+    #time.sleep(5)
     proxy_handler = urllib2.ProxyHandler(ipJson)
     opener=urllib2.build_opener(makeCookie(),urllib2.HTTPHandler,proxy_handler)
     urllib2.install_opener(opener)
@@ -158,6 +158,7 @@ def getData(uid,keyword,search_rule='',inshops=1):
             user_type = shoppage[i]["user_type"]
 
             itemid = shoppage[i]["nid"]
+            print(itemid)
             biz30day = shoppage[i]["biz30day"]
             volume30day = shoppage[i]["volume30day"]
 
@@ -387,6 +388,7 @@ if __name__ == "__main__":
 ##            print("task_today_start:",time.localtime())
 ##            b = time.localtime()
 ##            '''
+    
 ##            run the main job.
 ##            '''
 ##            main()

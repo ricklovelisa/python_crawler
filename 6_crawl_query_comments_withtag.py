@@ -514,8 +514,8 @@ def main():
         itemstage = sys.argv[1]
         limit_page = sys.argv[2]
     except:
-        itemstage = 26
-        limit_page = 10
+        itemstage = 408
+        limit_page = 1000
         
     projectlist = getTask(host,port,user,password,database,tablename,itemstage)
     print(projectlist)

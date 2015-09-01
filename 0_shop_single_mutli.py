@@ -228,42 +228,43 @@ def do_crawl_shop(tasklist):
         password = tasklist[3]
         database = tasklist[4]
         tablename = tasklist[5]
-        keyword = tasklist[6]
+        keywords = tasklist[6]
         rule_json = json.loads(tasklist[7].encode('utf-8'))
         search_rule = rule_json["search_rule"]
     except Exception,e:
         
         print("project_could_not_take_task",e)
-    #  单个项目设定单个跟踪 cookie 防止其他问题产生
-    opener = makeOpener()
-    # 关键词由数据库读取
-    soup = soupPage(openPage(opener,keyword,1,search_rule),"gbk")
-    pagenumber = getPageSize(soup)
-    # 循环页面抽取结果可换作多线程
-    datestr = time.strftime("%Y-%m-%d",time.localtime())+":"
-    print("\n"+datestr+database+":"+tablename+":",end='')
-    for i in range(1,pagenumber+1):
-        print('Done'+str(i)+"-")
-        resulttemp = getData(soupPage(openPage(opener,keyword,i,search_rule),"gbk"),i)
-        j = 1
-        if i>0 :
-            if j > 0:
-                j = 1
-                result = resulttemp
-                db=MySQLdb.connect(host=host,port=port,user=user,passwd=password,db=database,charset="utf8")
-                dbconn=db.cursor()
-                DataInsert = "REPLACE INTO "+tablename+" (updatetime,pageno,shopid,sellernick,shopname,shoptype,mainsell,maincat,address,item_num,sales,item_new_num,item_promo_num,uid,uid_encrypted,rank,rate_num,good_comment_rate,good_comment_num,dsr_desc,dsr_srv,dsr_ship,mg,sg,cg,keyword) VALUES ('"+time.strftime("%Y-%m-%d",time.localtime())+"',%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,'"+keyword+"')"
-                dbconn.executemany(DataInsert,result)
-                db.commit()
-                db.close()
-                result = resulttemp
-            else:
-                result.extend(resulttemp)
-                j = j +1
-	    
-        else:
-            result = resulttemp
+    for keyword in keywords.split(","):
+        #  单个项目设定单个跟踪 cookie 防止其他问题产生
+        opener = makeOpener()
+        # 关键词由数据库读取
+        soup = soupPage(openPage(opener,keyword,1,search_rule),"gbk")
+        pagenumber = getPageSize(soup)
+        # 循环页面抽取结果可换作多线程
+        datestr = time.strftime("%Y-%m-%d",time.localtime())+":"
+        print("\n"+datestr+database+":"+tablename+":",end='')
+        for i in range(1,pagenumber+1):
+            print('Done'+str(i)+"-")
+            resulttemp = getData(soupPage(openPage(opener,keyword,i,search_rule),"gbk"),i)
             j = 1
+            if i>0 :
+                if j > 0:
+                    j = 1
+                    result = resulttemp
+                    db=MySQLdb.connect(host=host,port=port,user=user,passwd=password,db=database,charset="utf8")
+                    dbconn=db.cursor()
+                    DataInsert = "REPLACE INTO "+tablename+" (updatetime,pageno,shopid,sellernick,shopname,shoptype,mainsell,maincat,address,item_num,sales,item_new_num,item_promo_num,uid,uid_encrypted,rank,rate_num,good_comment_rate,good_comment_num,dsr_desc,dsr_srv,dsr_ship,mg,sg,cg,keyword) VALUES ('"+time.strftime("%Y-%m-%d",time.localtime())+"',%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,'"+keyword+"')"
+                    dbconn.executemany(DataInsert,result)
+                    db.commit()
+                    db.close()
+                    result = resulttemp
+                else:
+                    result.extend(resulttemp)
+                    j = j +1
+                
+            else:
+                result = resulttemp
+                j = 1
 
 def initialTable(host,port,user,password,database,tbname,initial_sql):
     initial_str = initial_sql % str(tbname)
@@ -326,13 +327,13 @@ def main():
     try:
         shopstage = sys.argv[1]
     except:
-        shopstage =110
-    #for shopstage in range(0,1):       
-    tasklist = getTask(host,port,user,password,database,tablename,shopstage)
-    if tasklist == 0:
-        print("no task")
-    else:
-        runJob(tasklist,host,port,user,password,initial_str)
+        shopstage_list = range(409,422)
+    for shopstage in shopstage_list:
+        tasklist = getTask(host,port,user,password,database,tablename,shopstage)
+        if tasklist == 0:
+            print("no task")
+        else:
+            runJob(tasklist,host,port,user,password,initial_str)
 
 if __name__ =="__main__":
     main()

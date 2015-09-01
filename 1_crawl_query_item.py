@@ -9,7 +9,7 @@ import urllib2,urllib,time,re,socket,cookielib,random
 import json
 from BeautifulSoup import BeautifulSoup
 import multiprocessing
-# import top.api
+import top.api
 import yaml
 
 def getDate():
@@ -322,7 +322,7 @@ def main():
     try:
         itemstage = sys.argv[1]
     except:
-        itemstage = 111
+        itemstage = 66
     print(itemstage)
     projectlist = getTask(host,port,user,password,database,tablename,itemstage)
     print(len(projectlist))
